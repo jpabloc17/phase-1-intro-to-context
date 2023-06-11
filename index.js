@@ -1,76 +1,76 @@
-// Your code here
-// const array = ["Juan", "Castro", "SD", 21.40,]
-function createEmployeeRecord(array){
-    return {
-        firstName: array[0],
-        familyName: array[1],
-        title: array[2],
-        payPerHour: array[3],
-        timeInEvents: [],
-        timeOutEvents: []
-    }
-}
+const array = ["Juan", "Castro", "SD", 21.4];
+const timeInArray = "2018-01-01 2000";
+const timeOutArray = "2018-01-01 2300";
 
-function createEmployeeRecords(employeeRecords){
-    return employeeRecords.map(function(element){
-        return createEmployeeRecord(element);
-    })
-}
-
-function createTimeInEvent(recordObj, dateStamp){
-    const [date, hour] = dateStamp.split(" ");
-    recordObj.timeInEvents.push({
-        type: "TimeIn",
-        hour: parseInt(hour),
-        date: date,
-    });
-    return recordObj;
-}
-
-function createTimeOutEvent(recordObj, dateStamp){
-    const [date, hour] = dateStamp.split(" ");
-    recordObj.timeOutEvents.push({
-        type: "TimeOut",
-        hour: parseInt(hour),
-        date: date,
-    })
-    return recordObj
-}
-
-function hoursWorkedOnDate(recordObj, dateStamp){
-    const timeInEvent = recordObj.timeInEvents.find(
-        function(timeIn){
-            return timeIn.date === dateStamp
-        }
-    );
-    const timeOutEvent = recordObj.timeOutEvents.find(
-        function(timeOut){
-            return timeOut.date === dateStamp
-        }
-    );
-    return (timeOutEvent.hour - timeInEvent.hour) / 100;
-}
-
-function wagesEarnedOnDate(recordObj, date){
-    const hoursWorked = hoursWorkedOnDate(recordObj, date);
-    return hoursWorked * recordObj.payPerHour;
-}
-
-function allWagesFor(recordObj) {
-    let totalWages = 0;
-    recordObj.timeInEvents.map((timeInEvent) => {
-      const date = timeInEvent.date;
-      totalWages += wagesEarnedOnDate(recordObj, date);
-    });
-    return totalWages;
+function createEmployeeRecord(array) {
+  return {
+    firstName: array[0],
+    familyName: array[1],
+    title: array[2],
+    payPerHour: array[3],
+    timeInEvents: [],
+    timeOutEvents: [],
   };
+}
 
-function calculatePayroll(arrayOfEmployee){
-    const totalPayroll = arrayOfEmployee.reduce((total, employeeRecord) => {
-        return total + allWagesFor(employeeRecord);
-    }, 0);
-        return totalPayroll;
-  }
+function createEmployeeRecords(employeeRecords) {
+  return employeeRecords.map(function (element) {
+    return createEmployeeRecord(element);
+  });
+}
 
+function createTimeInEvent(employeeRecord, dateStamp) {
+  const [date, hour] = dateStamp.split(" ");
+  employeeRecord.timeInEvents.push({
+    type: "TimeIn",
+    hour: parseInt(hour),
+    date: date,
+  });
+  return employeeRecord;
+}
 
-// console.log(createEmployeeRecord(["Juan", "Castro", "SD", 21.40,]))
+function createTimeOutEvent(employeeRecord, dateStamp) {
+  const [date, hour] = dateStamp.split(" ");
+  employeeRecord.timeOutEvents.push({
+    type: "TimeOut",
+    hour: parseInt(hour),
+    date: date,
+  });
+  return employeeRecord;
+}
+
+function hoursWorkedOnDate(employeeRecord, dateStamp) {
+  const timeInEvent = employeeRecord.timeInEvents.find((element) => {
+    return element.date === dateStamp;
+  });
+
+  const timeOutEvent = employeeRecord.timeOutEvents.find((element) => {
+    return element.date === dateStamp;
+  });
+
+  return (timeOutEvent.hour - timeInEvent.hour) / 100;
+}
+
+function wagesEarnedOnDate(employeeRecord, dateStamp) {
+  const hoursWorked = hoursWorkedOnDate(employeeRecord, dateStamp);
+  return hoursWorked * employeeRecord.payPerHour;
+}
+
+function allWagesFor(employeeRecord) {
+  let totalWages = 0;
+  employeeRecord.timeInEvents.map((timeInEvent) => {
+    const date = timeInEvent.date;
+    totalWages += wagesEarnedOnDate(employeeRecord, date);
+  });
+  return totalWages;
+}
+
+function calculatePayroll(arrayOfEmployeeRecords) {
+  const totalPayroll = arrayOfEmployeeRecords.reduce(
+    (total, employeeRecord) => {
+      return total + allWagesFor(employeeRecord);
+    },
+    0
+  );
+  return totalPayroll;
+}
